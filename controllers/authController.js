@@ -79,3 +79,64 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+
+
+// Update User
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.params; // userId from URL
+    const { fname, lname, email, phone, password, gender, country } = req.body;
+
+    // Check if user exists
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check for duplicate email or phone (only if updated)
+    if (email && email !== user.email) {
+      const emailExists = await User.findOne({ email });
+      if (emailExists) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+      user.email = email;
+    }
+
+    if (phone && phone !== user.phone) {
+      const phoneExists = await User.findOne({ phone });
+      if (phoneExists) {
+        return res.status(400).json({ message: "Phone already exists" });
+      }
+      user.phone = phone;
+    }
+
+    // Update other fields
+    if (fname) user.fname = fname;
+    if (lname) user.lname = lname;
+    if (gender) user.gender = gender;
+    if (country) user.country = country;
+
+    // If password provided, hash it
+    if (password) {
+      user.password = await bcrypt.hash(password, 10);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "User updated successfully",
+      user: {
+        id: user._id,
+        fname: user.fname,
+        lname: user.lname,
+        email: user.email,
+        phone: user.phone,
+        gender: user.gender,
+        country: user.country,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
