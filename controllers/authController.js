@@ -3,11 +3,22 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 // Register
+
 exports.register = async (req, res) => {
   try {
-    const { fname, lname, email, phone, password, conformpassword, gender, country } = req.body;
+    console.log("Received data:", req.body);   
 
-    if (password !== conformpassword) {
+    const { fname, lname, email, phone, password, confirmpassword, gender, country, terms } = req.body;
+
+    if (!fname || !lname || !email || !phone || !password || !confirmpassword || !gender || !country) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if (!terms) {
+      return res.status(400).json({ message: "You must accept terms & conditions" });
+    }
+
+    if (password !== confirmpassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
 
@@ -29,10 +40,11 @@ exports.register = async (req, res) => {
     });
 
     await newUser.save();
-    res.status(201).json({ message: " User registered successfully", user: newUser });
+    res.status(201).json({ message: "User registered successfully", user: newUser });
   } catch (err) {
-    res.status(500).json({ message: " Server error", error: err.message });
-  }
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  } 
 };
 
 // Login
@@ -42,12 +54,12 @@ exports.login = async (req, res) => {
 
     const user = await User.findOne({ $or: [{ email }, { phone }] });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid Username or Password" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid Username or Password" });
     }
 
     const token = jwt.sign({ id: user._id }, "secretKey", { expiresIn: "1h" });

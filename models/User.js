@@ -6,8 +6,9 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
+  gender: { type: String, enum: ["Male", "Female"], required: true },
   country: { type: String, required: true },
+  terms: { type: Boolean, required: false },
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);
