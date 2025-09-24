@@ -85,7 +85,7 @@ exports.login = async (req, res) => {
 // Update User
 exports.updateUser = async (req, res) => {
   try {
-    const { id } = req.params; // userId from URL
+    const { id } = req.params; 
     const { fname, lname, email, phone, password, gender, country } = req.body;
 
     // Check if user exists
@@ -94,7 +94,6 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check for duplicate email or phone (only if updated)
     if (email && email !== user.email) {
       const emailExists = await User.findOne({ email });
       if (emailExists) {
