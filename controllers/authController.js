@@ -85,7 +85,7 @@ exports.login = async (req, res) => {
 // Update User
 exports.updateUser = async (req, res) => {
   try {
-    const { id } = req.params; // userId from URL
+    const { id } = req.params; 
     const { fname, lname, email, phone, password, gender, country } = req.body;
 
     // Check if user exists
@@ -94,7 +94,6 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check for duplicate email or phone (only if updated)
     if (email && email !== user.email) {
       const emailExists = await User.findOne({ email });
       if (emailExists) {
@@ -147,7 +146,7 @@ exports.getUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findById(id).select("-password"); // hide password
+    const user = await User.findById(id).select("-password"); 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -161,10 +160,11 @@ exports.getUser = async (req, res) => {
 // Get All Users
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password"); // hide password for all
+    const users = await User.find().select("-password"); 
     res.status(200).json({ message: "Users fetched successfully", users });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
 // Delete User
