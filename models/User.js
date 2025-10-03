@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   gender: { type: String, enum: ["Male", "Female"], required: true },
   country: { type: String, required: true },
   terms: { type: Boolean, required: false },
+  avatarUrl: { type: String, default: "" }, 
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

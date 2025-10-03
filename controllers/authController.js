@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+
 // Register
 
 exports.register = async (req, res) => {
@@ -37,7 +38,9 @@ exports.register = async (req, res) => {
       password: hashedPassword,
       gender,
       country,
+    avatarUrl: "",
     });
+
 
     await newUser.save();
     res.status(201).json({ message: "User registered successfully", user: newUser });
@@ -73,6 +76,10 @@ exports.login = async (req, res) => {
         lname: user.lname,
         email: user.email,
         phone: user.phone,
+        gender: user.gender,
+        country: user.country,
+        avatarUrl: user.avatarUrl,
+     
       },
     });
   } catch (err) {
@@ -110,6 +117,10 @@ exports.updateUser = async (req, res) => {
       user.phone = phone;
     }
 
+    if (req.file) {
+      user.avatarUrl = `/uploads/${req.file.filename}`;
+    }
+
     // Update other fields
     if (fname) user.fname = fname;
     if (lname) user.lname = lname;
@@ -121,6 +132,7 @@ exports.updateUser = async (req, res) => {
       user.password = await bcrypt.hash(password, 10);
     }
 
+console.log( user.avatarUrl)
     await user.save();
 
     res.status(200).json({
@@ -133,6 +145,7 @@ exports.updateUser = async (req, res) => {
         phone: user.phone,
         gender: user.gender,
         country: user.country,
+       avatarUrl: user.avatarUrl,
       },
     });
   } catch (err) {
