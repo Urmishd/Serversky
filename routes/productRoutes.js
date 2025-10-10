@@ -1,5 +1,5 @@
 const express = require("express");
-const { addProduct, getAllProducts, getProductById } = require("../controllers/productController");
+const { addProduct, getAllProducts, getProductById ,deleteProduct} = require("../controllers/productController");
 const upload = require("../middleware/upload");
 
 const router = express.Router();
