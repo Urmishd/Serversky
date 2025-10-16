@@ -7,8 +7,6 @@ const authRoutes = require("./routes/authRoutes");
 const path = require("path");
 
 const productRoutes = require("./routes/productRoutes");
-const path = require("path");
-
 
 const app = express();
 

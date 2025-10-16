@@ -1,9 +1,5 @@
 const express = require("express");
 const { register, login,updateUser,getUser,getAllUsers,deleteUser } = require("../controllers/authController");
-<<<<<<< HEAD
-=======
-
->>>>>>> ec85c75bae4f2427705c7a789ad8716aeef4958f
 const router = express.Router();
 const multer = require("multer");
 
