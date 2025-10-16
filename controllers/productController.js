@@ -28,7 +28,7 @@ exports.addProduct = async (req, res) => {
 
 
     const photoUrl = photoFilename
-      ? `${req.protocol}://${req.get("host")}/uploads/${photoFilename}`
+      ? `${req.protocol}://${req.get("host")}/uploads/img/${photoFilename}`
       : "";
 
     res.status(201).json({
