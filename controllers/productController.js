@@ -13,7 +13,7 @@ exports.addProduct = async (req, res) => {
 
     let photoFilename = "";
     if (req.file) {
-      photo = req.file.filename; 
+      photoFilename = req.file.filename; 
     }
 
  
@@ -91,6 +91,48 @@ exports.deleteProduct = async (req, res) => {
 
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Update product
+exports.updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, price } = req.body;
+
+
+    const product = await Product.findById(id);
+    if (!product)
+      return res.status(404).json({ message: "Product not found" });
+
+    // Update image if new file uploaded
+    let photoFilename = product.photo;
+    if (req.file) {
+      photoFilename = req.file.filename;
+    }
+
+    // Update fields
+    product.name = name || product.name;
+    product.description = description || product.description;
+    product.price = price || product.price;
+    product.photo = photoFilename;
+
+    await product.save();
+
+    const photoUrl = photoFilename
+      ? `${req.protocol}://${req.get("host")}/uploads/${photoFilename}`
+      : "";
+
+    res.status(200).json({
+      message: "Product updated successfully",
+      product: {
+        ...product.toObject(),
+        photo: photoUrl,
+      },
+    });
+  } catch (err) {
+    console.error("Error updating product:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
