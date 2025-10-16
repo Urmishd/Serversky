@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 
 const app = express();
+const path = require("path");
 
 connectDB();
 
@@ -19,7 +20,6 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/products", productRoutes);
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const PORT = 5000;
 app.listen(PORT, () => {
